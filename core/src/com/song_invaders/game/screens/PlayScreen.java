@@ -22,6 +22,7 @@ public class PlayScreen implements Screen
     private HudScreen hud;
     private OrthographicCamera camera;
     private SpaceShip spaceShip;
+    private MShip mShip;
 
     public PlayScreen(SongInvaders game)
     {

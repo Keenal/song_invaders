@@ -9,9 +9,11 @@ import com.badlogic.gdx.physics.box2d.Shape;
 
 public class Target {
     boolean isGood;
+    boolean isDone;
+    TargetZone targetZone;
+    int x;
+    int y;
 
-    //TargetZone targetZone;
-    //position variable?
     Rectangle shape;
     String sound;
 
@@ -52,7 +54,15 @@ public class Target {
     public void setSound(String sound) {
         this.sound = sound;
     }
-/*
+
+        public boolean isDone() {
+        return isDone;
+    }
+
+    public void setDone(boolean done) {
+        isDone = done;
+    }
+
     public TargetZone getTargetZone() {
         return targetZone;
     }
@@ -60,5 +70,21 @@ public class Target {
     public void setTargetZone(TargetZone targetZone) {
         this.targetZone = targetZone;
     }
-    */
+
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 }
