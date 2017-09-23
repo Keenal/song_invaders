@@ -1,6 +1,7 @@
 package com.song_invaders.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,11 +29,40 @@ public class PlayScreen implements Screen
         this.game = game;
         this.batch = game.batch;
         this.hud = new HudScreen(batch);
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        this.camera = new OrthographicCamera();
+        this.camera.setToOrtho(false, SongInvaders.WIDTH, SongInvaders.HEIGHT);
 
         // Init Sprites
         this.spaceShip = new SpaceShip();
+    }
+
+    public boolean gameOver()
+    {
+        return false;
+    }
+
+    private void handleInput(float dtime)
+    {
+        if (!gameOver())
+        {
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+            {
+                // Move player to the left
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+            {
+                // Move player to the left
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.SPACE))
+            {
+                // Move player to the left
+            }
+        }
+    }
+
+    private void update(float dtime)
+    {
+        this.camera.update();
     }
 
     @Override
@@ -42,17 +72,20 @@ public class PlayScreen implements Screen
     }
 
     @Override
-    public void render(float delta)
+    public void render(float dtime)
     {
+        // Update game state
+        this.update(dtime);
+
         // Set up view
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        camera.update();
         this.hud.stage.draw();
 
-        // Update sprites
 
-
+        // Draw batch
+        this.batch.begin();
+        this.batch.end();
     }
 
     @Override
@@ -82,6 +115,6 @@ public class PlayScreen implements Screen
     @Override
     public void dispose()
     {
-
+        this.hud.dispose();
     }
 }
