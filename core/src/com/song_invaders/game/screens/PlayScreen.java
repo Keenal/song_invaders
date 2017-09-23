@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.song_invaders.game.SongInvaders;
-import com.song_invaders.game.Sprite.SpaceShip;
+import com.song_invaders.game.sprite.*;
 
 /**
  * Created by natha on 9/23/2017.
