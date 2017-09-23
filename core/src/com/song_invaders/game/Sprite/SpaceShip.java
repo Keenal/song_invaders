@@ -5,4 +5,6 @@ package com.song_invaders.game.Sprite;
  */
 
 public class SpaceShip {
+
+    boolean isGood;
 }
