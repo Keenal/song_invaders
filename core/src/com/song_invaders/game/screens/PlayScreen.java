@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.song_invaders.game.SongInvaders;
 import com.song_invaders.game.sprite.*;
 
@@ -20,8 +22,10 @@ public class PlayScreen implements Screen
     private SongInvaders game;
     private SpriteBatch batch;
     private ShapeRenderer renderer;
-    private HudScreen hud;
     private OrthographicCamera camera;
+    private World world;
+
+    private HudScreen hud;
     private SpaceShip spaceShip;
     private MShip mShip;
 
@@ -31,14 +35,19 @@ public class PlayScreen implements Screen
         this.game = game;
         this.batch = game.batch;
         this.renderer = new ShapeRenderer();
-
-        this.hud = new HudScreen(batch);
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, SongInvaders.WIDTH, SongInvaders.HEIGHT);
+        this.world = new World(new Vector2(0, -10f), true);
+
+        this.hud = new HudScreen(batch);
 
         // Init Sprites
         this.spaceShip = new SpaceShip(0, 20);
         this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20);
+    }
+
+    public World getWorld() {
+        return this.world;
     }
 
     public boolean gameOver()
