@@ -3,7 +3,7 @@ package com.song_invaders.game.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.song_invaders.game.Song Invaders;
+import com.song_invaders.game.SongInvaders;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -14,6 +14,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new Song Invaders();
+                return new SongInvaders();
         }
 }
