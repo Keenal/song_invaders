@@ -1,6 +1,15 @@
 package com.song_invaders.game.sprite;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 
 /**
  * Created by Howtoon on 9/23/17.
@@ -12,12 +21,20 @@ public class Target {
     TargetZone targetZone;
     int x;
     int y;
-
-    Rectangle shape;
+    Texture img;
+    Sprite sprite;
+    BodyDef bodyDef;
+    Rectangle rectangle;
     String sound;
+    World world;
+    Body body;
+    PolygonShape shape;
+    FixtureDef fixtureDef;
+    Fixture fixture;
 
-    public Target()
+    public Target(World _world)
     {
+        world = _world;
         img = new Texture("badlogic.jpg");
         sprite = new Sprite(img);
 
@@ -25,16 +42,11 @@ public class Target {
         sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2);
 
-        // Create a physics world, the heart of the simulation.  The Vector
-        passed in is gravity
-        world = new World(new Vector2(0, -98f), true);
 
-        // Now create a BodyDefinition.  This defines the physics objects type
-        and position in the simulation
-        BodyDef bodyDef = new BodyDef();
+        // Now create a BodyDefinition.  This defines the physics objects type and position in the simulation
+        bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        // We are going to use 1 to 1 dimensions.  Meaning 1 in physics engine
-        is 1 pixel
+        // We are going to use 1 to 1 dimensions.  Meaning 1 in physics engine is 1 pixel
         // Set our body to the same position as our sprite
         bodyDef.position.set(sprite.getX(), sprite.getY());
 
@@ -42,24 +54,20 @@ public class Target {
         body = world.createBody(bodyDef);
 
         // Now define the dimensions of the physics shape
-        PolygonShape shape = new PolygonShape();
+        shape = new PolygonShape();
         // We are a box, so this makes sense, no?
-        // Basically set the physics polygon to a box with the same dimensions
-        as our sprite
+        // Basically set the physics polygon to a box with the same dimension as our sprite
         shape.setAsBox(sprite.getWidth()/2, sprite.getHeight()/2);
 
         // FixtureDef is a confusing expression for physical properties
-        // Basically this is where you, in addition to defining the shape of the
-        body
-        // you also define it's properties like density, restitution and others
-        we will see shortly
-        // If you are wondering, density and area are used to calculate over all
-        mass
-        FixtureDef fixtureDef = new FixtureDef();
+        // Basically this is where you, in addition to defining the shape of the body
+        // you also define it's properties like density, restitution and others we will see shortly
+        // If you are wondering, density and area are used to calculate over all mass
+        fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
 
-        Fixture fixture = body.createFixture(fixtureDef);
+        fixture = body.createFixture(fixtureDef);
 
         // Shape is the only disposable of the lot, so get rid of it
         shape.dispose();
@@ -83,11 +91,11 @@ public class Target {
     }
 
     public Rectangle getShape() {
-        return shape;
+        return rectangle;
     }
 
     public void setShape(Rectangle shape) {
-        this.shape = shape;
+        this.rectangle = rectangle;
     }
 
     public String getSound() {
