@@ -11,6 +11,8 @@ import com.song_invaders.game.screens.PlayScreen;
 public class SongInvaders extends Game
 {
 	public SpriteBatch batch;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 480;
 
 	@Override
 	public void create () {
