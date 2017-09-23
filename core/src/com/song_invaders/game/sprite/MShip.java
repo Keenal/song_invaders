@@ -5,8 +5,8 @@ package com.song_invaders.game.sprite;
  */
 
 public class MShip {
-    Target[] targets;
-    Column[] columns;
+    com.song_invaders.game.sprite.Target[] targets;
+    com.song_invaders.game.sprite.Column[] columns;
 
     public MShip()
     {
