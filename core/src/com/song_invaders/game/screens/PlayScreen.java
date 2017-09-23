@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -31,7 +32,9 @@ public class PlayScreen implements Screen
     private SpaceShip spaceShip;
     private Array<Rectangle> missiles;
     private static final int MISSILE_SPEED = 400;
+    private static final int TARGETSHAPE_SPEED = 300;
     private long lastFired = 0;
+    private long shapeFired = 0;
     private static final long FIRE_COOLDOWN = 1000000000;
     private MShip mShip;
 
@@ -91,6 +94,19 @@ public class PlayScreen implements Screen
                     this.lastFired = TimeUtils.nanoTime();
                 }
             }
+
+           /*
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
+
+            {
+                // Move player to the left
+
+                if ((TimeUtils.nanoTime() - this.shapeFired) > FIRE_COOLDOWN) {
+                   targetShapes.add(new Circle(this.mShip.getShape().x + mShip.WIDTH / 2, this.mShip.getShape().y, 20));
+                    this.shapeFired = TimeUtils.nanoTime();
+                }
+            }
+            */
         }
     }
 
@@ -108,6 +124,15 @@ public class PlayScreen implements Screen
             if (missile.y > SongInvaders.HEIGHT)
                 this.missiles.removeValue(missile, true);
         }
+
+        /*
+        for (Circle targetShape : this.targetShapes) {
+            targetShape.y -= this.TARGETSHAPE_SPEED* Gdx.graphics.getDeltaTime();
+            if (targetShape.y < 0) {
+                this.targetShapes.removeValue(targetShape, true);
+            }
+        }
+        */
     }
 
     @Override
@@ -150,7 +175,13 @@ public class PlayScreen implements Screen
         for (Rectangle missile : this.missiles) {
             this.renderer.rect(missile.x, missile.y, missile.width, missile.height);
         }
+
+        for (Circle targetShape : mShip.targetShapes) {
+            this.renderer.circle(targetShape.x, targetShape.y, targetShape.radius);
+        }
         this.renderer.end();
+
+
 
     }
 

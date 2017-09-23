@@ -10,7 +10,7 @@ public class SpaceShip {
 
 
     Rectangle shape;
-    private int speed = 200;
+    private int speed = 400;
     public static final int WIDTH = 20;
     public static final int HEIGHT = 20;
 

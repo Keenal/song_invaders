@@ -18,6 +18,7 @@ public class SongInvaders extends Game
     public static final int WIDTH = 800;
     public static final int HEIGHT = 480;
 
+
 	@Override
 	public void create () {
 		this.batch = new SpriteBatch();
@@ -30,6 +31,8 @@ public class SongInvaders extends Game
         manager.load("audio/sounds/SC/SC/SC_full.wav", Music.class);
         manager.finishLoading();
 
+
+
         this.setScreen(new PlayScreen(this));
 	}
 
@@ -40,4 +43,7 @@ public class SongInvaders extends Game
 	public void dispose () {
 		batch.dispose();
 	}
+
+
+
 }
