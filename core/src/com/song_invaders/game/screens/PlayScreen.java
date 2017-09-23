@@ -57,11 +57,17 @@ public class PlayScreen implements Screen
             {
                 // Move player to the left
                 this.spaceShip.getShape().x -= this.spaceShip.getSpeed() * Gdx.graphics.getDeltaTime();
+                if (this.spaceShip.getShape().x < 0) {
+                    this.spaceShip.getShape().x = 0;
+                }
             }
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             {
                 // Move player to the right
                 this.spaceShip.getShape().x += this.spaceShip.getSpeed() * Gdx.graphics.getDeltaTime();
+                if (this.spaceShip.getShape().x > SongInvaders.WIDTH - this.spaceShipWidth) {
+                    this.spaceShip.getShape().x = SongInvaders.WIDTH - this.spaceShipWidth;
+                }
             }
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.SPACE))
             {
