@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.song_invaders.game.SongInvaders;
+import com.song_invaders.game.Sprite.SpaceShip;
 
 /**
  * Created by natha on 9/23/2017.
@@ -17,16 +18,21 @@ public class PlayScreen implements Screen
 {
     private SongInvaders game;
     private SpriteBatch batch;
-    //private HudScene hud;
+    private HudScreen hud;
     private OrthographicCamera camera;
+    private SpaceShip spaceShip;
 
     public PlayScreen(SongInvaders game)
     {
+        // Set up Play Screen
         this.game = game;
         this.batch = game.batch;
-        //this.hud = new HudScene(batch);
+        this.hud = new HudScreen(batch);
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
+
+        // Init Sprites
+        this.spaceShip = new SpaceShip();
     }
 
     @Override
@@ -38,9 +44,15 @@ public class PlayScreen implements Screen
     @Override
     public void render(float delta)
     {
+        // Set up view
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
+        this.hud.stage.draw();
+
+        // Update sprites
+
+
     }
 
     @Override
