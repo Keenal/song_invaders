@@ -49,6 +49,7 @@ public class PlayScreen implements Screen
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             {
                 // Move player to the left
+
             }
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             {
@@ -75,6 +76,12 @@ public class PlayScreen implements Screen
     @Override
     public void render(float dtime)
     {
+        if (this.gameOver())
+        {
+            this.game.setScreen(new GameOverScreen(game));
+            this.dispose();
+        }
+
         // Update game state
         this.update(dtime);
 
