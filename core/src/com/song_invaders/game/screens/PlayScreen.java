@@ -180,9 +180,6 @@ public class PlayScreen implements Screen
             this.renderer.circle(targetShape.x, targetShape.y, targetShape.radius);
         }
         this.renderer.end();
-
-
-
     }
 
     @Override
