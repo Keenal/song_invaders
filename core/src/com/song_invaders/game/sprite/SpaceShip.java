@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class SpaceShip {
 
+
     Rectangle shape;
 
     public SpaceShip()
@@ -15,6 +16,17 @@ public class SpaceShip {
 
     }
 
+    public Rectangle getShape() {
+        return shape;
+    }
+
+    public void setShape(Rectangle shape) {
+        this.shape = shape;
+    }
+
+    public void update(){
+
+    }
 
 
 }
