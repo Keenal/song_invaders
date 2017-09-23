@@ -19,22 +19,29 @@ public class PlayScreen implements Screen
 {
     private SongInvaders game;
     private SpriteBatch batch;
+    private ShapeRenderer renderer;
     private HudScreen hud;
     private OrthographicCamera camera;
     private SpaceShip spaceShip;
+    private int spaceShipWidth = 20;
+    private int spaceShipHeight = 20;
     private MShip mShip;
+    private int mShipWidth = 20;
+    private int mShipHeight = 20;
 
     public PlayScreen(SongInvaders game)
     {
         // Set up Play Screen
         this.game = game;
         this.batch = game.batch;
+        this.renderer = new ShapeRenderer();
+
         this.hud = new HudScreen(batch);
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, SongInvaders.WIDTH, SongInvaders.HEIGHT);
 
         // Init Sprites
-        this.spaceShip = new SpaceShip();
+        this.spaceShip = new SpaceShip(0, 20, spaceShipWidth, spaceShipHeight);
     }
 
     public boolean gameOver()
@@ -49,11 +56,12 @@ public class PlayScreen implements Screen
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             {
                 // Move player to the left
-
+                this.spaceShip.getShape().x -= this.spaceShip.getSpeed() * Gdx.graphics.getDeltaTime();
             }
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             {
-                // Move player to the left
+                // Move player to the right
+                this.spaceShip.getShape().x += this.spaceShip.getSpeed() * Gdx.graphics.getDeltaTime();
             }
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.SPACE))
             {
@@ -64,6 +72,7 @@ public class PlayScreen implements Screen
 
     private void update(float dtime)
     {
+        this.handleInput(dtime);
         this.camera.update();
     }
 
@@ -92,8 +101,17 @@ public class PlayScreen implements Screen
 
 
         // Draw batch
+        this.batch.setProjectionMatrix(camera.combined);
         this.batch.begin();
         this.batch.end();
+
+        // Draw shapes
+        this.renderer.setProjectionMatrix(camera.combined);
+        this.renderer.begin(ShapeRenderer.ShapeType.Filled);
+        this.renderer.setColor(1, 0.5f, 0, 1);
+        this.renderer.rect(this.spaceShip.getShape().x, this.spaceShip.getShape().y, this.spaceShipWidth, this.spaceShipHeight);
+        this.renderer.end();
+
     }
 
     @Override
