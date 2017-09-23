@@ -6,9 +6,27 @@ package com.song_invaders.game.sprite;
 
 public class TargetZone {
 
-    // position: variable?
+    int x;
+    int y;
 
     public void update(){
 
+    }
+
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }
