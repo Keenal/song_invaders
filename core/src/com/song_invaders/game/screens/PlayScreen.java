@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.song_invaders.game.SongInvaders;
 import com.song_invaders.game.sprite.*;
 
@@ -27,6 +29,10 @@ public class PlayScreen implements Screen
 
     private HudScreen hud;
     private SpaceShip spaceShip;
+    private Array<Rectangle> missiles;
+    private static final int MISSILE_SPEED = 400;
+    private long lastFired = 0;
+    private static final long FIRE_COOLDOWN = 1000000000;
     private MShip mShip;
 
     public PlayScreen(SongInvaders game)
@@ -43,6 +49,7 @@ public class PlayScreen implements Screen
 
         // Init Sprites
         this.spaceShip = new SpaceShip(0, 20);
+        this.missiles = new Array<Rectangle>();
         this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20);
     }
 
@@ -78,6 +85,11 @@ public class PlayScreen implements Screen
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.SPACE))
             {
                 // Move player to the left
+
+                if ((TimeUtils.nanoTime() - this.lastFired) > FIRE_COOLDOWN) {
+                    missiles.add(new Rectangle(this.spaceShip.getShape().x + SpaceShip.WIDTH / 2, this.spaceShip.getShape().y + SpaceShip.HEIGHT, 2, 5));
+                    this.lastFired = TimeUtils.nanoTime();
+                }
             }
         }
     }
@@ -89,6 +101,13 @@ public class PlayScreen implements Screen
 
         // Update Sprites
         this.mShip.update();
+
+        // Update missiles
+        for (Rectangle missile : this.missiles) {
+            missile.y += this.MISSILE_SPEED * Gdx.graphics.getDeltaTime();
+            if (missile.y > SongInvaders.HEIGHT)
+                this.missiles.removeValue(missile, true);
+        }
     }
 
     @Override
@@ -127,6 +146,10 @@ public class PlayScreen implements Screen
         this.renderer.rect(this.spaceShip.getShape().x, this.spaceShip.getShape().y, SpaceShip.WIDTH, SpaceShip.HEIGHT);
         this.renderer.setColor(0.3f, 0.4f, 0.6f, 1);
         this.renderer.rect(this.mShip.getShape().x, this.mShip.getShape().y, MShip.WIDTH, MShip.HEIGHT);
+        this.renderer.setColor(1, 1, 1, 1);
+        for (Rectangle missile : this.missiles) {
+            this.renderer.rect(missile.x, missile.y, missile.width, missile.height);
+        }
         this.renderer.end();
 
     }
