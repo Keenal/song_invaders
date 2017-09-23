@@ -9,14 +9,17 @@ public class Column {
     int xValue;
 
     public Column(int xValue) {
+
         this.xValue = xValue;
     }
 
     public int getxValue() {
+
         return xValue;
     }
 
     public void setxValue(int xValue) {
+
         this.xValue = xValue;
     }
 
