@@ -10,12 +10,13 @@ public class SpaceShip {
 
 
     Rectangle shape;
-    private int width, height;
     private int speed = 200;
+    public static final int WIDTH = 20;
+    public static final int HEIGHT = 20;
 
-    public SpaceShip(int x, int y, int width, int height)
+    public SpaceShip(int x, int y)
     {
-        this.shape = new Rectangle(x, y, width, height);
+        this.shape = new Rectangle(x, y, WIDTH, HEIGHT);
     }
 
     public Rectangle getShape() {

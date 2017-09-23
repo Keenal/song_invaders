@@ -23,11 +23,7 @@ public class PlayScreen implements Screen
     private HudScreen hud;
     private OrthographicCamera camera;
     private SpaceShip spaceShip;
-    private int spaceShipWidth = 20;
-    private int spaceShipHeight = 20;
     private MShip mShip;
-    private int mShipWidth = 20;
-    private int mShipHeight = 20;
 
     public PlayScreen(SongInvaders game)
     {
@@ -41,7 +37,8 @@ public class PlayScreen implements Screen
         this.camera.setToOrtho(false, SongInvaders.WIDTH, SongInvaders.HEIGHT);
 
         // Init Sprites
-        this.spaceShip = new SpaceShip(0, 20, spaceShipWidth, spaceShipHeight);
+        this.spaceShip = new SpaceShip(0, 20);
+        this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20);
     }
 
     public boolean gameOver()
@@ -65,8 +62,8 @@ public class PlayScreen implements Screen
             {
                 // Move player to the right
                 this.spaceShip.getShape().x += this.spaceShip.getSpeed() * Gdx.graphics.getDeltaTime();
-                if (this.spaceShip.getShape().x > SongInvaders.WIDTH - this.spaceShipWidth) {
-                    this.spaceShip.getShape().x = SongInvaders.WIDTH - this.spaceShipWidth;
+                if (this.spaceShip.getShape().x > SongInvaders.WIDTH - SpaceShip.WIDTH) {
+                    this.spaceShip.getShape().x = SongInvaders.WIDTH - SpaceShip.WIDTH;
                 }
             }
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.SPACE))
@@ -80,6 +77,9 @@ public class PlayScreen implements Screen
     {
         this.handleInput(dtime);
         this.camera.update();
+
+        // Update Sprites
+        this.mShip.update();
     }
 
     @Override
@@ -115,7 +115,9 @@ public class PlayScreen implements Screen
         this.renderer.setProjectionMatrix(camera.combined);
         this.renderer.begin(ShapeRenderer.ShapeType.Filled);
         this.renderer.setColor(1, 0.5f, 0, 1);
-        this.renderer.rect(this.spaceShip.getShape().x, this.spaceShip.getShape().y, this.spaceShipWidth, this.spaceShipHeight);
+        this.renderer.rect(this.spaceShip.getShape().x, this.spaceShip.getShape().y, SpaceShip.WIDTH, SpaceShip.HEIGHT);
+        this.renderer.setColor(0.3f, 0.4f, 0.6f, 1);
+        this.renderer.rect(this.mShip.getShape().x, this.mShip.getShape().y, MShip.WIDTH, MShip.HEIGHT);
         this.renderer.end();
 
     }
