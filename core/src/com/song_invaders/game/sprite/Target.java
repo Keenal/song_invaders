@@ -1,7 +1,6 @@
 package com.song_invaders.game.sprite;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.Shape;
 
 /**
  * Created by Howtoon on 9/23/17.
