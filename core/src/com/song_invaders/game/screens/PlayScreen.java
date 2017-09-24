@@ -116,7 +116,7 @@ public class PlayScreen implements Screen
     public void checkCollisions() {
         for (Rectangle missile : this.missiles) {
             for (Circle targetShape : this.mShip.targetShapes) {
-                double dist = this.euclidDist((int) (targetShape.x + targetShape.radius), (int) (targetShape.y + targetShape.radius), (int) (missile.x + missile.width / 2), (int) (missile.y + missile.height / 2));
+                double dist = this.euclidDist((int) (targetShape.x), (int) (targetShape.y), (int) (missile.x), (int) (missile.y));
 
                 if (dist < targetShape.radius / 2 + missile.width || dist < targetShape.radius / 2 + missile.height) {
                     this.mShip.targetShapes.removeValue(targetShape, true);
