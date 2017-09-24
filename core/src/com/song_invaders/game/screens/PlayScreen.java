@@ -38,7 +38,7 @@ public class PlayScreen implements Screen
     private long shapeFired = 0;
     private static final long FIRE_COOLDOWN = 1000000000;
     private MShip mShip;
-    private Target tmp;
+    //private Target tmp;
 
     public PlayScreen(SongInvaders game)
     {
@@ -56,7 +56,7 @@ public class PlayScreen implements Screen
         this.spaceShip = new SpaceShip(0, 20);
         this.missiles = new Array<Rectangle>();
         this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20, this.world);
-        this.tmp = new Target((int) this.mShip.getShape().x, (int) this.mShip.getShape().y - 20, this.world);
+        //this.tmp = new Target((int) this.mShip.getShape().x, (int) this.mShip.getShape().y - 20, this.world);
     }
 
     public World getWorld() {
@@ -113,6 +113,25 @@ public class PlayScreen implements Screen
         }
     }
 
+    public void checkCollisions() {
+        for (Rectangle missile : this.missiles) {
+            for (Circle targetShape : this.mShip.targetShapes) {
+                double dist = this.euclidDist((int) (targetShape.x + targetShape.radius), (int) (targetShape.y + targetShape.radius), (int) (missile.x + missile.width / 2), (int) (missile.y + missile.height / 2));
+
+                if (dist < targetShape.radius / 2 + missile.width || dist < targetShape.radius / 2 + missile.height) {
+                    this.mShip.targetShapes.removeValue(targetShape, true);
+                    this.hud.addScore(20);
+                    this.missiles.removeValue(missile, true);
+                    break;
+                }
+            }
+        }
+    }
+
+    public double euclidDist(int x1, int y1, int x2, int y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
     private void update(float dtime)
     {
         this.world.step(Gdx.graphics.getDeltaTime(), 6, 2);
@@ -120,6 +139,7 @@ public class PlayScreen implements Screen
         this.camera.update();
 
         // Update Sprites
+        this.checkCollisions();
         this.mShip.update();
 
         // Update missiles
@@ -127,9 +147,10 @@ public class PlayScreen implements Screen
             missile.y += this.MISSILE_SPEED * Gdx.graphics.getDeltaTime();
             if (missile.y > SongInvaders.HEIGHT)
                 this.missiles.removeValue(missile, true);
+
         }
 
-        this.tmp.update();
+        //this.tmp.update();
         /*
         for (Circle targetShape : this.targetShapes) {
             targetShape.y -= this.TARGETSHAPE_SPEED* Gdx.graphics.getDeltaTime();
@@ -182,7 +203,7 @@ public class PlayScreen implements Screen
         for (Rectangle missile : this.missiles) {
             this.renderer.rect(missile.x, missile.y, missile.width, missile.height);
         }
-        this.renderer.rect(this.tmp.getX(), this.tmp.getY(), 20, 20);
+        //this.renderer.rect(this.tmp.getX(), this.tmp.getY(), 20, 20);
         for (Circle targetShape : mShip.targetShapes) {
             this.renderer.circle(targetShape.x, targetShape.y, targetShape.radius);
         }

@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.song_invaders.game.SongInvaders;
 
+import java.sql.Time;
+
 /**
  * Created by Howtoon on 9/23/17.
  */
@@ -27,7 +29,10 @@ public class MShip {
 
     public Array<Circle> targetShapes;
     public Array<Circle> targetBadShapes;
-    private static final int TARGETSHAPE_SPEED = 400;
+    private static final int TARGETSHAPE_SPEED = 50;
+    public boolean bounce = false;
+    private long lastBounce = 0;
+    public static final long BOUNCE_COOLDOWN = 10000000000L;
 
 
     private long shapeFired = 0;
