@@ -27,6 +27,7 @@ public class SongInvaders extends Game
         manager.load("audio/sounds/SC/SC/SC_2.wav", Sound.class);
         manager.load("audio/sounds/SC/SC/SC_3.wav", Sound.class);
         manager.load("audio/sounds/SC/SC/SC_4.wav", Sound.class);
+        manager.load("audio/sounds/SC/SC/shoot.wav", Sound.class);
         manager.load("audio/sounds/SC/SC/SC_full.wav", Music.class);
         manager.finishLoading();
 

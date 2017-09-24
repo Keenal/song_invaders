@@ -2,6 +2,7 @@ package com.song_invaders.game.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.World;
 import com.song_invaders.game.SongInvaders;
 
 /**
@@ -9,15 +10,17 @@ import com.song_invaders.game.SongInvaders;
  */
 
 public class MShip {
-    com.song_invaders.game.sprite.Target[] targets;
-    com.song_invaders.game.sprite.Column[] columns;
+    private
+
+    Target[] targets;
+    Column[] columns;
     Rectangle shape;
     private int speed = 50;
     public static final int WIDTH = 20;
     public static final int HEIGHT = 20;
     private boolean moving_left = true;
 
-    public MShip(int x, int y)
+    public MShip(int x, int y, World world)
     {
         this.shape = new Rectangle(x, y, WIDTH, HEIGHT);
     }
@@ -26,8 +29,7 @@ public class MShip {
         return shape;
     }
 
-    public void dropTarget()
-    {
+    public void dropTarget() {
 
     }
 

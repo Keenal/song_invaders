@@ -21,8 +21,6 @@ public class Target {
     TargetZone targetZone;
     int x;
     int y;
-    Texture img;
-    Sprite sprite;
     BodyDef bodyDef;
     Rectangle rectangle;
     String sound;
@@ -32,23 +30,16 @@ public class Target {
     FixtureDef fixtureDef;
     Fixture fixture;
 
-    public Target(World _world)
+    public Target(int x, int y, World world)
     {
-        world = _world;
-        img = new Texture("badlogic.jpg");
-        sprite = new Sprite(img);
-
-        // Center the sprite in the top/middle of the screen
-        sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2);
-
+        this.world = world;
 
         // Now create a BodyDefinition.  This defines the physics objects type and position in the simulation
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         // We are going to use 1 to 1 dimensions.  Meaning 1 in physics engine is 1 pixel
         // Set our body to the same position as our sprite
-        bodyDef.position.set(sprite.getX(), sprite.getY());
+        bodyDef.position.set(x, y);
 
         // Create a body in the world using our definition
         body = world.createBody(bodyDef);
@@ -57,7 +48,7 @@ public class Target {
         shape = new PolygonShape();
         // We are a box, so this makes sense, no?
         // Basically set the physics polygon to a box with the same dimension as our sprite
-        shape.setAsBox(sprite.getWidth()/2, sprite.getHeight()/2);
+        shape.setAsBox(20, 20);
 
         // FixtureDef is a confusing expression for physical properties
         // Basically this is where you, in addition to defining the shape of the body
@@ -75,7 +66,8 @@ public class Target {
 
     public void update()
     {
-
+        this.x = (int) this.body.getPosition().x;
+        this.y = (int) this.body.getPosition().y;
     }
 
     public void playSound(){

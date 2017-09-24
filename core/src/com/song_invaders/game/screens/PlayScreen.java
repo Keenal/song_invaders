@@ -3,6 +3,7 @@ package com.song_invaders.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -34,6 +35,7 @@ public class PlayScreen implements Screen
     private long lastFired = 0;
     private static final long FIRE_COOLDOWN = 1000000000;
     private MShip mShip;
+    private Target tmp;
 
     public PlayScreen(SongInvaders game)
     {
@@ -50,7 +52,8 @@ public class PlayScreen implements Screen
         // Init Sprites
         this.spaceShip = new SpaceShip(0, 20);
         this.missiles = new Array<Rectangle>();
-        this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20);
+        this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20, this.world);
+        this.tmp = new Target((int) this.mShip.getShape().x, (int) this.mShip.getShape().y - 20, this.world);
     }
 
     public World getWorld() {
@@ -84,11 +87,11 @@ public class PlayScreen implements Screen
             }
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.SPACE))
             {
-                // Move player to the left
-
+                // Fire missile
                 if ((TimeUtils.nanoTime() - this.lastFired) > FIRE_COOLDOWN) {
                     missiles.add(new Rectangle(this.spaceShip.getShape().x + SpaceShip.WIDTH / 2, this.spaceShip.getShape().y + SpaceShip.HEIGHT, 2, 5));
                     this.lastFired = TimeUtils.nanoTime();
+                    SongInvaders.manager.get("audio/sounds/SC/SC/shoot.wav", Sound.class).play();
                 }
             }
         }
@@ -96,6 +99,7 @@ public class PlayScreen implements Screen
 
     private void update(float dtime)
     {
+        this.world.step(Gdx.graphics.getDeltaTime(), 6, 2);
         this.handleInput(dtime);
         this.camera.update();
 
@@ -108,6 +112,8 @@ public class PlayScreen implements Screen
             if (missile.y > SongInvaders.HEIGHT)
                 this.missiles.removeValue(missile, true);
         }
+
+        this.tmp.update();
     }
 
     @Override
@@ -150,6 +156,7 @@ public class PlayScreen implements Screen
         for (Rectangle missile : this.missiles) {
             this.renderer.rect(missile.x, missile.y, missile.width, missile.height);
         }
+        this.renderer.rect(this.tmp.getX(), this.tmp.getY(), 20, 20);
         this.renderer.end();
 
     }
@@ -182,5 +189,6 @@ public class PlayScreen implements Screen
     public void dispose()
     {
         this.hud.dispose();
+        this.world.dispose();
     }
 }
