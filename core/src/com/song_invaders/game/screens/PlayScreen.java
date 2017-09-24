@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.song_invaders.game.SongInvaders;
 import com.song_invaders.game.sprite.*;
+import com.song_invaders.game.tools.WorldContactListener;
 
 /**
  * Created by natha on 9/23/2017.
@@ -31,7 +32,7 @@ public class PlayScreen implements Screen
 
     private HudScreen hud;
     private SpaceShip spaceShip;
-    private Array<Rectangle> missiles;
+    private static Array<Missile> missiles;
     private static final int MISSILE_SPEED = 400;
     private static final int TARGETSHAPE_SPEED = 300;
     private long lastFired = 0;
@@ -49,12 +50,13 @@ public class PlayScreen implements Screen
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, SongInvaders.WIDTH, SongInvaders.HEIGHT);
         this.world = new World(new Vector2(0, -10f), true);
+        this.world.setContactListener(new WorldContactListener());
 
         this.hud = new HudScreen(batch);
 
         // Init Sprites
         this.spaceShip = new SpaceShip(0, 20);
-        this.missiles = new Array<Rectangle>();
+        this.missiles = new Array<Missile>();
         this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20, this.world);
         this.tmp = new Target((int) this.mShip.getShape().x, (int) this.mShip.getShape().y - 20, this.world);
     }
@@ -92,9 +94,10 @@ public class PlayScreen implements Screen
             {
                 // Fire missile
                 if ((TimeUtils.nanoTime() - this.lastFired) > FIRE_COOLDOWN) {
-                    missiles.add(new Rectangle(this.spaceShip.getShape().x + SpaceShip.WIDTH / 2, this.spaceShip.getShape().y + SpaceShip.HEIGHT, 2, 5));
+                    Missile missile = new Missile((int) this.spaceShip.getShape().x + SpaceShip.WIDTH / 2, (int) this.spaceShip.getShape().y + SpaceShip.HEIGHT, this.world);
+                    missile.getBody().setLinearVelocity(0, 200f);
+                    missiles.add(missile);
                     this.lastFired = TimeUtils.nanoTime();
-                    SongInvaders.manager.get("audio/sounds/SC/SC/shoot.wav", Sound.class).play();
                 }
             }
 
@@ -123,10 +126,11 @@ public class PlayScreen implements Screen
         this.mShip.update();
 
         // Update missiles
-        for (Rectangle missile : this.missiles) {
-            missile.y += this.MISSILE_SPEED * Gdx.graphics.getDeltaTime();
-            if (missile.y > SongInvaders.HEIGHT)
-                this.missiles.removeValue(missile, true);
+        for (Missile missile : missiles) {
+            missile.update();
+            if (missile.getY() > SongInvaders.HEIGHT) {
+                missiles.removeValue(missile, true);
+            }
         }
 
         this.tmp.update();
@@ -144,6 +148,10 @@ public class PlayScreen implements Screen
     public void show()
     {
 
+    }
+
+    public static void removeMissile(Missile missile) {
+        missiles.removeValue(missile, true);
     }
 
     @Override
@@ -172,6 +180,8 @@ public class PlayScreen implements Screen
         this.batch.end();
 
         // Draw shapes
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         this.renderer.setProjectionMatrix(camera.combined);
         this.renderer.begin(ShapeRenderer.ShapeType.Filled);
         this.renderer.setColor(1, 0.5f, 0, 1);
@@ -179,10 +189,9 @@ public class PlayScreen implements Screen
         this.renderer.setColor(0.3f, 0.4f, 0.6f, 1);
         //this.renderer.rect(this.mShip.getShape().x, this.mShip.getShape().y, MShip.WIDTH, MShip.HEIGHT);
         this.renderer.setColor(1, 1, 1, 1);
-        for (Rectangle missile : this.missiles) {
-            this.renderer.rect(missile.x, missile.y, missile.width, missile.height);
+        for (Missile missile : this.missiles) {
+            this.renderer.rect(missile.getX(), missile.getY(), 2, 5);
         }
-        this.renderer.rect(this.tmp.getX(), this.tmp.getY(), 20, 20);
         for (Circle targetShape : mShip.targetShapes) {
             this.renderer.circle(targetShape.x, targetShape.y, targetShape.radius);
         }
@@ -191,6 +200,10 @@ public class PlayScreen implements Screen
         for (Circle targetBadShape : mShip.targetBadShapes) {
             this.renderer.circle(targetBadShape.x, targetBadShape.y, targetBadShape.radius);
         }
+        this.renderer.setColor(1, 1, 1, 1);
+        this.renderer.rect(this.tmp.getX(), this.tmp.getY(), 20, 20);
+        this.renderer.setColor(0, 1, 0, 0.5f);
+        this.renderer.rect(this.tmp.getZone().getX(), this.tmp.getZone().getY(), 20, 20);
         this.renderer.end();
     }
 

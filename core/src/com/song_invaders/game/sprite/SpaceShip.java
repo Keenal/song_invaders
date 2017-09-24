@@ -11,7 +11,7 @@ public class SpaceShip {
 
 
     Rectangle shape;
-    private int speed = 350;
+    private int speed = 200;
     public static final int WIDTH = 20;
     public static final int HEIGHT = 20;
     public Texture SS;

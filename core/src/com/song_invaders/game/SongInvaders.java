@@ -18,8 +18,13 @@ public class SongInvaders extends Game
     public static final int WIDTH = 800;
     public static final int HEIGHT = 480;
 
+    public static final short NOTHING_BIT = 0;
+    public static final short MISSILE_BIT = 1;
+    public static final short TARGET_BIT = 2;
+    public static final short BAD_TARGET_BIT = 4;
 
-	@Override
+
+    @Override
 	public void create () {
 		this.batch = new SpriteBatch();
         manager = new AssetManager();

@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.song_invaders.game.SongInvaders;
 
 /**
  * Created by Howtoon on 9/23/17.
@@ -18,7 +21,6 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Target {
     boolean isGood;
     boolean isDone;
-    TargetZone targetZone;
     int x;
     int y;
     BodyDef bodyDef;
@@ -29,10 +31,12 @@ public class Target {
     PolygonShape shape;
     FixtureDef fixtureDef;
     Fixture fixture;
+    private TargetZone zone;
 
     public Target(int x, int y, World world)
     {
         this.world = world;
+        this.zone = new TargetZone(x);
 
         // Now create a BodyDefinition.  This defines the physics objects type and position in the simulation
         bodyDef = new BodyDef();
@@ -48,7 +52,7 @@ public class Target {
         shape = new PolygonShape();
         // We are a box, so this makes sense, no?
         // Basically set the physics polygon to a box with the same dimension as our sprite
-        shape.setAsBox(20, 20);
+        shape.setAsBox(10, 10);
 
         // FixtureDef is a confusing expression for physical properties
         // Basically this is where you, in addition to defining the shape of the body
@@ -57,8 +61,12 @@ public class Target {
         fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
+        //fixtureDef.restitution = 0.7f;
+        fixtureDef.filter.categoryBits = SongInvaders.TARGET_BIT;
+
 
         fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
 
         // Shape is the only disposable of the lot, so get rid of it
         shape.dispose();
@@ -68,6 +76,41 @@ public class Target {
     {
         this.x = (int) this.body.getPosition().x;
         this.y = (int) this.body.getPosition().y;
+    }
+
+    public Body getBody() {
+        return this.body;
+    }
+
+    public TargetZone getZone() {
+        return this.zone;
+    }
+
+    public void inZone() {
+        if (this.x > this.zone.getX() - 300 && this.x < this.zone.getX() + 100) {
+            if (this.y > this.zone.getY() - 300 && this.y < this.zone.getY() + 100) {
+                Filter filter = new Filter();
+                filter.maskBits = SongInvaders.NOTHING_BIT;
+                for (Fixture fixture : body.getFixtureList())
+                    fixture.setFilterData(filter);
+                //this.world.destroyBody(this.body);
+               // bodyDef.position.set(x, y);
+                // Create a body in the world using our definition
+                //body = world.createBody(bodyDef);
+                //fixture = body.createFixture(fixtureDef);
+                //fixture.setUserData(this);
+                this.body.setLinearVelocity(0, 0);
+                this.body.setGravityScale(0);
+                //this.body.applyLinearImpulse(new Vector2(this.x - this.zone.getX(), this.y - this.zone.getY()), this.body.getWorldCenter(), true);
+                //this.bodyDef.position.set(this.zone.getX(), this.zone.getY());
+               // this.body = this.world.createBody(this.bodyDef);
+                //
+                System.out.println("X: " + this.zone.getX() + " Y: " + this.zone.getY());
+               // this.x = this.zone.getX();
+                //this.y = this.zone.getY();
+                System.out.println("Gott em'");
+            }
+        }
     }
 
     public void playSound(){
@@ -105,15 +148,6 @@ public class Target {
     public void setDone(boolean done) {
         isDone = done;
     }
-
-    public TargetZone getTargetZone() {
-        return targetZone;
-    }
-
-    public void setTargetZone(TargetZone targetZone) {
-        this.targetZone = targetZone;
-    }
-
 
     public int getX() {
         return x;
