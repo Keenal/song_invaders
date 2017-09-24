@@ -11,6 +11,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -28,6 +32,8 @@ public class PlayScreen implements Screen
     private ShapeRenderer renderer;
     private OrthographicCamera camera;
     private World world;
+
+    private Body ground;
 
     private HudScreen hud;
     private SpaceShip spaceShip;
@@ -48,7 +54,7 @@ public class PlayScreen implements Screen
         this.renderer = new ShapeRenderer();
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, SongInvaders.WIDTH, SongInvaders.HEIGHT);
-        this.world = new World(new Vector2(0, 0), true);
+        this.world = new World(new Vector2(0, -10), true);
 
         this.hud = new HudScreen(batch);
 
@@ -56,6 +62,28 @@ public class PlayScreen implements Screen
         this.spaceShip = new SpaceShip(0, 40, this.world);
         this.missiles = new Array<Rectangle>();
         this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20, this.world);
+    }
+
+
+    private void createGround()
+    {
+        if (ground != null) world.destroyBody(ground);
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+
+        FixtureDef fixtureDef = new FixtureDef();
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(camera.viewportWidth, 1);
+
+        fixtureDef.shape = shape;
+
+        ground = world.createBody(bodyDef);
+        ground.createFixture(fixtureDef);
+        ground.setTransform(0, 0, 0);
+
+        shape.dispose();
     }
 
     public World getWorld() {
@@ -215,7 +243,11 @@ public class PlayScreen implements Screen
     @Override
     public void resize(int width, int height)
     {
+       // viewport.update(width, height, true);
 
+        batch.setProjectionMatrix(camera.combined);
+
+        createGround();
     }
 
     @Override

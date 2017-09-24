@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.song_invaders.game.screens.IntroScreen;
 import com.song_invaders.game.screens.PlayScreen;
 
 public class SongInvaders extends Game
@@ -32,9 +33,7 @@ public class SongInvaders extends Game
         manager.load("audio/sounds/SC/SC/SC_full.wav", Music.class);
         manager.finishLoading();
 
-
-
-        this.setScreen(new PlayScreen(this));
+        this.setScreen(new IntroScreen(this));
 	}
 
 	@Override

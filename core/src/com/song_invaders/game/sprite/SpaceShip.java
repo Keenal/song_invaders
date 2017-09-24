@@ -30,11 +30,13 @@ public class SpaceShip extends Sprite
         this.setSize(WIDTH, HEIGHT);
         this.world = world;
         BodyDef bdef = new BodyDef();
-        bdef.position.set(x, y);
+        bdef.position.set(x, y + HEIGHT / 2);
         bdef.type = BodyDef.BodyType.DynamicBody;
         this.body = this.world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
+        fdef.friction = 100;
+
         CircleShape shape = new CircleShape();
         shape.setRadius(10);
 
@@ -47,7 +49,7 @@ public class SpaceShip extends Sprite
     }
 
     public void update(){
-        this.setPosition(this.body.getPosition().x + this.getWidth() / 2, this.body.getPosition().y - this.getHeight());
+        this.setPosition(this.body.getPosition().x + this.getWidth() / 2, this.body.getPosition().y + this.getHeight());
     }
 
 }
