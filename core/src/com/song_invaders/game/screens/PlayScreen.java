@@ -48,15 +48,14 @@ public class PlayScreen implements Screen
         this.renderer = new ShapeRenderer();
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, SongInvaders.WIDTH, SongInvaders.HEIGHT);
-        this.world = new World(new Vector2(0, -10f), true);
+        this.world = new World(new Vector2(0, 0), true);
 
         this.hud = new HudScreen(batch);
 
         // Init Sprites
-        this.spaceShip = new SpaceShip(0, 20);
+        this.spaceShip = new SpaceShip(0, 40, this.world);
         this.missiles = new Array<Rectangle>();
         this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20, this.world);
-        //this.tmp = new Target((int) this.mShip.getShape().x, (int) this.mShip.getShape().y - 20, this.world);
     }
 
     public World getWorld() {
@@ -75,24 +74,19 @@ public class PlayScreen implements Screen
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             {
                 // Move player to the left
-                this.spaceShip.getShape().x -= this.spaceShip.getSpeed() * Gdx.graphics.getDeltaTime();
-                if (this.spaceShip.getShape().x < 0) {
-                    this.spaceShip.getShape().x = 0;
-                }
+                this.spaceShip.getBody().applyLinearImpulse(new Vector2(-4f, 0), this.spaceShip.getBody().getWorldCenter(), true);
             }
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             {
                 // Move player to the right
-                this.spaceShip.getShape().x += this.spaceShip.getSpeed() * Gdx.graphics.getDeltaTime();
-                if (this.spaceShip.getShape().x > SongInvaders.WIDTH - SpaceShip.WIDTH) {
-                    this.spaceShip.getShape().x = SongInvaders.WIDTH - SpaceShip.WIDTH;
-                }
+                this.spaceShip.getBody().applyLinearImpulse(new Vector2(4f, 0), this.spaceShip.getBody().getWorldCenter(), true);
+
             }
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.SPACE))
             {
                 // Fire missile
                 if ((TimeUtils.nanoTime() - this.lastFired) > FIRE_COOLDOWN) {
-                    missiles.add(new Rectangle(this.spaceShip.getShape().x + SpaceShip.WIDTH / 2, this.spaceShip.getShape().y + SpaceShip.HEIGHT, 2, 5));
+                    missiles.add(new Rectangle(this.spaceShip.getX() + SpaceShip.WIDTH / 2, this.spaceShip.getY() + SpaceShip.HEIGHT, 2, 5));
                     this.lastFired = TimeUtils.nanoTime();
                     SongInvaders.manager.get("audio/sounds/SC/SC/shoot.wav", Sound.class).play();
                 }
@@ -141,6 +135,8 @@ public class PlayScreen implements Screen
         // Update Sprites
         this.checkCollisions();
         this.mShip.update();
+        this.spaceShip.update();
+        //System.out.println("X: " + this.spaceShip.getX() + " Y: " + this.spaceShip.getY());
 
         // Update missiles
         for (Rectangle missile : this.missiles) {
@@ -188,7 +184,8 @@ public class PlayScreen implements Screen
         // Draw batch
         this.batch.setProjectionMatrix(camera.combined);
         this.batch.begin();
-        this.batch.draw(this.spaceShip.SS, this.spaceShip.getShape().x, this.spaceShip.getShape().y, SpaceShip.WIDTH, SpaceShip.HEIGHT);
+        this.spaceShip.draw(batch);
+        //this.batch.draw(this.spaceShip.SS, this.spaceShip.getX(), this.spaceShip.getY(), SpaceShip.WIDTH, SpaceShip.HEIGHT);
         this.batch.draw(this.mShip.MJ, this.mShip.getShape().x, this.mShip.getShape().y, MShip.WIDTH, MShip.HEIGHT);
         this.batch.end();
 
