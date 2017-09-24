@@ -162,15 +162,17 @@ public class PlayScreen implements Screen
         // Draw batch
         this.batch.setProjectionMatrix(camera.combined);
         this.batch.begin();
+        this.batch.draw(this.spaceShip.SS, this.spaceShip.getShape().x, this.spaceShip.getShape().y, SpaceShip.WIDTH, SpaceShip.HEIGHT);
+        this.batch.draw(this.mShip.MJ, this.mShip.getShape().x, this.mShip.getShape().y, MShip.WIDTH, MShip.HEIGHT);
         this.batch.end();
 
         // Draw shapes
         this.renderer.setProjectionMatrix(camera.combined);
         this.renderer.begin(ShapeRenderer.ShapeType.Filled);
         this.renderer.setColor(1, 0.5f, 0, 1);
-        this.renderer.rect(this.spaceShip.getShape().x, this.spaceShip.getShape().y, SpaceShip.WIDTH, SpaceShip.HEIGHT);
+        //this.renderer.rect(this.spaceShip.getShape().x, this.spaceShip.getShape().y, SpaceShip.WIDTH, SpaceShip.HEIGHT);
         this.renderer.setColor(0.3f, 0.4f, 0.6f, 1);
-        this.renderer.rect(this.mShip.getShape().x, this.mShip.getShape().y, MShip.WIDTH, MShip.HEIGHT);
+        //this.renderer.rect(this.mShip.getShape().x, this.mShip.getShape().y, MShip.WIDTH, MShip.HEIGHT);
         this.renderer.setColor(1, 1, 1, 1);
         for (Rectangle missile : this.missiles) {
             this.renderer.rect(missile.x, missile.y, missile.width, missile.height);
@@ -178,6 +180,11 @@ public class PlayScreen implements Screen
 
         for (Circle targetShape : mShip.targetShapes) {
             this.renderer.circle(targetShape.x, targetShape.y, targetShape.radius);
+        }
+
+        this.renderer.setColor(1, 0, 0, 1);
+        for (Circle targetBadShape : mShip.targetBadShapes) {
+            this.renderer.circle(targetBadShape.x, targetBadShape.y, targetBadShape.radius);
         }
         this.renderer.end();
     }
