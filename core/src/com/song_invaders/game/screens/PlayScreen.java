@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -215,6 +216,12 @@ public class PlayScreen implements Screen
         this.spaceShip.draw(batch);
         //this.batch.draw(this.spaceShip.SS, this.spaceShip.getX(), this.spaceShip.getY(), SpaceShip.WIDTH, SpaceShip.HEIGHT);
         this.batch.draw(this.mShip.MJ, this.mShip.getShape().x, this.mShip.getShape().y, MShip.WIDTH, MShip.HEIGHT);
+        for (Circle targetShape : mShip.targetShapes) {
+            this.batch.draw(new Texture("img/alien.png"), targetShape.x, targetShape.y, 20, 20);
+        }
+        for (Circle targetBadShape : mShip.targetBadShapes) {
+            this.batch.draw(new Texture("img/asteroid.png"), targetBadShape.x, targetBadShape. y, 20, 20);
+        }
         this.batch.end();
 
         // Draw shapes
@@ -229,14 +236,14 @@ public class PlayScreen implements Screen
             this.renderer.rect(missile.x, missile.y, missile.width, missile.height);
         }
         //this.renderer.rect(this.tmp.getX(), this.tmp.getY(), 20, 20);
-        for (Circle targetShape : mShip.targetShapes) {
+       /* for (Circle targetShape : mShip.targetShapes) {
             this.renderer.circle(targetShape.x, targetShape.y, targetShape.radius);
         }
 
         this.renderer.setColor(1, 0, 0, 1);
         for (Circle targetBadShape : mShip.targetBadShapes) {
             this.renderer.circle(targetBadShape.x, targetBadShape.y, targetBadShape.radius);
-        }
+        }*/
         this.renderer.end();
     }
 
