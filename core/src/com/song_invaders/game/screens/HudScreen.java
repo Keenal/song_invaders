@@ -21,8 +21,8 @@ public class HudScreen implements Disposable
     public Stage stage;
     private Viewport viewport;
 
-    private static int score;
-    private static int lives;
+    public static int score;
+    public static int lives;
 
     private static Label scoreLabel;
     private static Label livesLabel;
@@ -30,7 +30,8 @@ public class HudScreen implements Disposable
 
     public HudScreen(SpriteBatch batch)
     {
-        this.score = 0;
+        score = 0;
+        lives = 3;
 
         this.viewport = new FitViewport(SongInvaders.WIDTH, SongInvaders.HEIGHT, new OrthographicCamera());
         this.stage = new Stage(this.viewport, batch);
@@ -40,8 +41,8 @@ public class HudScreen implements Disposable
         table.top();
         table.setFillParent(true);
 
-        this.scoreLabel = new Label(String.format("Score: %06d", this.score), font);
-        this.livesLabel = new Label(String.format("Lives: %d", this.score), font);
+        this.scoreLabel = new Label(String.format("Score: %06d", score), font);
+        this.livesLabel = new Label(String.format("Lives: %d", lives), font);
 
         table.add(this.scoreLabel).expandX();
         table.add(this.livesLabel).expandX();
@@ -61,6 +62,14 @@ public class HudScreen implements Disposable
     {
 
         lives++;
+        livesLabel.setText(String.format("Lives: %d", lives));
+
+    }
+
+    public static void removeLife()
+    {
+
+        lives--;
         livesLabel.setText(String.format("Lives: %d", lives));
 
     }

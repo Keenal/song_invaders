@@ -35,6 +35,8 @@ public class PlayScreen implements Screen
     private World world;
 
     private Body ground;
+    private Body lWall;
+    private Body rWall;
 
     private HudScreen hud;
     private SpaceShip spaceShip;
@@ -65,6 +67,33 @@ public class PlayScreen implements Screen
         this.mShip = new MShip(SongInvaders.WIDTH - MShip.WIDTH, SongInvaders.HEIGHT - MShip.HEIGHT - 20, this.world);
     }
 
+    private void createWalls() {
+        if (this.lWall != null)
+            world.destroyBody(this.lWall);
+        if (this.rWall != null)
+            world.destroyBody(this.rWall);
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+
+        FixtureDef fixtureDef = new FixtureDef();
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(camera.viewportHeight, 0.1f);
+
+        fixtureDef.shape = shape;
+
+        lWall = world.createBody(bodyDef);
+        lWall.createFixture(fixtureDef);
+        lWall.setTransform(0, 0, 90);
+
+        rWall = world.createBody(bodyDef);
+        rWall.createFixture(fixtureDef);
+        rWall.setTransform(camera.viewportHeight, 0, 90);
+
+        shape.dispose();
+    }
+
 
     private void createGround()
     {
@@ -93,7 +122,7 @@ public class PlayScreen implements Screen
 
     public boolean gameOver()
     {
-        return false;
+        return (this.hud.lives == 0) ? true : false;
     }
 
     private void handleInput(float dtime)
@@ -141,9 +170,21 @@ public class PlayScreen implements Screen
             for (Circle targetShape : this.mShip.targetShapes) {
                 double dist = this.euclidDist((int) (targetShape.x), (int) (targetShape.y), (int) (missile.x), (int) (missile.y));
 
-                if (dist < targetShape.radius / 2 + missile.width || dist < targetShape.radius / 2 + missile.height) {
+                if (dist < 20 + missile.width || dist < 20 + missile.height) {
                     this.mShip.targetShapes.removeValue(targetShape, true);
                     this.hud.addScore(20);
+                    this.missiles.removeValue(missile, true);
+                    break;
+                }
+            }
+
+            for (Circle targetBadShape : this.mShip.targetBadShapes) {
+                double dist = this.euclidDist((int) (targetBadShape.x), (int) (targetBadShape.y), (int) (missile.x), (int) (missile.y));
+
+                if (dist < 20 + missile.width || dist < 20 + missile.height) {
+                    this.mShip.targetBadShapes.removeValue(targetBadShape, true);
+                    this.hud.addScore(-20);
+                    this.hud.removeLife();
                     this.missiles.removeValue(missile, true);
                     break;
                 }
@@ -172,7 +213,6 @@ public class PlayScreen implements Screen
             missile.y += this.MISSILE_SPEED * Gdx.graphics.getDeltaTime();
             if (missile.y > SongInvaders.HEIGHT)
                 this.missiles.removeValue(missile, true);
-
         }
 
         //this.tmp.update();
@@ -195,11 +235,7 @@ public class PlayScreen implements Screen
     @Override
     public void render(float dtime)
     {
-        if (this.gameOver())
-        {
-            this.game.setScreen(new GameOverScreen(game));
-            this.dispose();
-        }
+
 
         // Update game state
         this.update(dtime);
@@ -236,7 +272,7 @@ public class PlayScreen implements Screen
             this.renderer.rect(missile.x, missile.y, missile.width, missile.height);
         }
         //this.renderer.rect(this.tmp.getX(), this.tmp.getY(), 20, 20);
-       /* for (Circle targetShape : mShip.targetShapes) {
+        /*for (Circle targetShape : mShip.targetShapes) {
             this.renderer.circle(targetShape.x, targetShape.y, targetShape.radius);
         }
 
@@ -245,6 +281,12 @@ public class PlayScreen implements Screen
             this.renderer.circle(targetBadShape.x, targetBadShape.y, targetBadShape.radius);
         }*/
         this.renderer.end();
+
+        if (this.gameOver())
+        {
+            this.game.setScreen(new GameOverScreen(game));
+            this.dispose();
+        }
     }
 
     @Override
